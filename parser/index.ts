@@ -1,6 +1,16 @@
-import type { Expr } from "./types"
+import type {
+  BinaryFunctionExpr,
+  ConstExpr,
+  Expr,
+  UnaryFunctionExpr,
+} from "./types"
 
-import { ArithOperator, Constants } from "./types"
+import {
+  ArithOperator,
+  BinaryFunction,
+  Constants,
+  UnaryFunction,
+} from "./types"
 
 export function parse(source: string): Expr {
   const tokens = tokenize(source)
@@ -9,7 +19,7 @@ export function parse(source: string): Expr {
 
 function tokenize(source: string): string[] {
   return source
-    .replace(/([+\-*/^{}])/g, " $1 ")
+    .replace(/([+\-*/^{}(),])/g, " $1 ")
     .trim()
     .split(/\s+/)
     .filter(Boolean)
@@ -40,9 +50,51 @@ function parseExpr(tokens: string[]): Expr {
       eat()
 
       if (Object.values(Constants).includes(token as Constants))
-        return { type: "ConstExpr", value: token as Constants }
+        return { type: "ConstExpr", value: token as Constants } as ConstExpr
+
+      if (Object.values(BinaryFunction).includes(token as BinaryFunction)) {
+        if (peek() === "(") {
+          eat("(")
+          const firstArgument = parseAddition()
+          if (!eat(","))
+            throw new Error(
+              `Expected comma between the arguments of for function call: ${token}`
+            )
+          const secondArgument = parseAddition()
+          if (!eat(")"))
+            throw new Error(
+              `Expected closing parenthesis for function call: ${token}`
+            )
+
+          return {
+            type: "BinaryFunctionExpr",
+            functionName: token as BinaryFunction,
+            arguments: [firstArgument, secondArgument],
+          } as BinaryFunctionExpr
+        }
+      }
+
+      if (Object.values(UnaryFunction).includes(token as UnaryFunction)) {
+        if (peek() === "(") {
+          eat("(")
+          const argument = parseAddition()
+          if (!eat(")"))
+            throw new Error("Expected closing parenthesis for function call")
+
+          return {
+            type: "UnaryFunctionExpr",
+            functionName: token as UnaryFunction,
+            argument,
+          } as UnaryFunctionExpr
+        }
+      }
 
       return { type: "VarExpr", name: token }
+    } else if (token === "(") {
+      eat("(")
+      const expr = parseAddition()
+      if (!eat(")")) throw new Error("Expected closing parenthesis")
+      return expr
     } else if (token === "{") {
       eat("{")
       const expr = parseAddition()

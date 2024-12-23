@@ -25,6 +25,9 @@ const equation = await input({
   message: "Enter the equation in LaTeX syntax.",
 })
 
-const parsed: Expr = parse(equation)
-
-console.log(parsed)
+try {
+  const parsed: Expr = parse(equation)
+  console.log(parsed)
+} catch (error) {
+  console.log(error)
+}

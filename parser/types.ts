@@ -1,4 +1,10 @@
-export type Expr = ConstExpr | VarExpr | ExponentialExpr | ArithExpr
+export type Expr =
+  | ConstExpr
+  | VarExpr
+  | ExponentialExpr
+  | ArithExpr
+  | UnaryFunctionExpr
+  | BinaryFunctionExpr
 
 export interface ConstExpr {
   type: "ConstExpr"
@@ -22,17 +28,32 @@ export interface ArithExpr {
   operands: [Expr, Expr]
 }
 
-interface FunctionExpr {
-  type: "FunctionExpr"
-  functionName: Function
+export interface UnaryFunctionExpr {
+  type: "UnaryFunctionExpr"
+  functionName: UnaryFunction
   argument: Expr
 }
 
-export enum Function {
+export interface BinaryFunctionExpr {
+  type: "BinaryFunctionExpr"
+  functionName: BinaryFunction
+  arguments: [Expr, Expr]
+}
+
+export enum UnaryFunction {
   Sine = "sin",
   Cosine = "cos",
   Tangent = "tan",
   Cotangent = "cot",
+  Sec = "sec",
+  Cosec = "csc",
+  SquareRoot = "sqrt",
+  NaturalLog = "ln",
+}
+
+export enum BinaryFunction {
+  Root = "root",
+  Log = "log",
 }
 
 export enum Constants {
