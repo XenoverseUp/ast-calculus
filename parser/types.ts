@@ -8,7 +8,7 @@ export type Expr =
 
 export interface ConstExpr {
   type: "ConstExpr"
-  value: number | Constants
+  value: number
 }
 
 export interface VarExpr {
@@ -49,16 +49,18 @@ export enum UnaryFunction {
   Cosec = "csc",
   SquareRoot = "sqrt",
   NaturalLog = "ln",
+  NaturalExp = "exp",
 }
 
 export enum BinaryFunction {
   Root = "root",
   Log = "log",
+  Power = "pow",
 }
 
 export enum Constants {
-  pi = "pi",
-  e = "e",
+  pi = Math.PI,
+  e = Math.E,
 }
 
 export enum ArithOperator {
@@ -66,4 +68,50 @@ export enum ArithOperator {
   Minus = "-",
   Mult = "*",
   Div = "/",
+}
+
+export function MAKE_CONST(value: number | Constants): ConstExpr {
+  return <ConstExpr>{ type: "ConstExpr", value }
+}
+
+export function MAKE_VAR(name: string): VarExpr {
+  return <VarExpr>{ type: "VarExpr", name }
+}
+
+export function MAKE_ARITH(
+  operator: ArithOperator,
+  left: Expr,
+  right: Expr
+): ArithExpr {
+  return <ArithExpr>{ type: "ArithExpr", operator, operands: [left, right] }
+}
+
+export function MAKE_EXPONENT(base: Expr, exponent: Expr): ExponentialExpr {
+  return <ExponentialExpr>{
+    type: "ExponentialExpr",
+    base,
+    exponent,
+  }
+}
+
+export function MAKE_UNARY_FUNCTION(
+  name: UnaryFunction,
+  argument: Expr
+): UnaryFunctionExpr {
+  return <UnaryFunctionExpr>{
+    type: "UnaryFunctionExpr",
+    functionName: name,
+    argument,
+  }
+}
+
+export function MAKE_BINARY_FUNCTION(
+  name: BinaryFunction,
+  argumentList: [Expr, Expr]
+): BinaryFunctionExpr {
+  return <BinaryFunctionExpr>{
+    type: "BinaryFunctionExpr",
+    functionName: name,
+    arguments: argumentList,
+  }
 }

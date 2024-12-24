@@ -9,6 +9,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@inquirer/prompts": "^7.2.1"
+    "@inquirer/prompts": "^7.2.1",
+    "@nodegui/nodegui": "^0.70.0"
   }
 }

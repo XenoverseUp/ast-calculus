@@ -10,3 +10,11 @@ export const TOKENS = {
   PI: "pi",
   EULER: "e",
 }
+
+export function tokenize(source: string): string[] {
+  return source
+    .replace(/([+\-*/^{}(),])/g, " $1 ")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+}

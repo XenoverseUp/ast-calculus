@@ -1,3 +1,4 @@
+import { tokenize, TOKENS } from "./tokenizer"
 import type {
   BinaryFunctionExpr,
   ConstExpr,
@@ -14,15 +15,8 @@ import {
 
 export function parse(source: string): Expr {
   const tokens = tokenize(source)
-  return parseExpr(tokens)
-}
 
-function tokenize(source: string): string[] {
-  return source
-    .replace(/([+\-*/^{}(),])/g, " $1 ")
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean)
+  return parseExpr(tokens)
 }
 
 function parseExpr(tokens: string[]): Expr {
@@ -49,8 +43,11 @@ function parseExpr(tokens: string[]): Expr {
     } else if (/[a-zA-Z]/.test(token)) {
       eat()
 
-      if (Object.values(Constants).includes(token as Constants))
-        return { type: "ConstExpr", value: token as Constants } as ConstExpr
+      if (Object.keys(Constants).includes(token))
+        return {
+          type: "ConstExpr",
+          value: Constants[token as keyof typeof Constants],
+        } as ConstExpr
 
       if (Object.values(BinaryFunction).includes(token as BinaryFunction)) {
         if (peek() === "(") {
