@@ -45,6 +45,8 @@ try {
     let result = type === Action.Diff ? differentiate(parsed, variable) : null
     // console.dir(result, { depth: null })
 
+    result = evaluate(result!)
+
     console.log(renderToString(result!))
 } catch (error) {
     console.log(error)

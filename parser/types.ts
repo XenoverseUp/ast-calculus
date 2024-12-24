@@ -137,3 +137,7 @@ export function MAKE_ARITH_REC(
         MAKE_ARITH_REC(operator, ...args.slice(1))
     )
 }
+
+export function IS_EQUAL_CONST(expr: Expr, value: number | Constants): boolean {
+    return expr.type === "ConstExpr" && expr.value === value
+}

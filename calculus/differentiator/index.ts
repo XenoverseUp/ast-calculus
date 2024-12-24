@@ -16,13 +16,11 @@ import {
 
 export function differentiate(expr: Expr, variable: VarExpr): Expr {
     switch (expr.type) {
-        case "ConstExpr": {
+        case "ConstExpr":
             return MAKE_CONST(0)
-        }
 
-        case "VarExpr": {
+        case "VarExpr":
             return expr.name === variable.name ? MAKE_CONST(1) : MAKE_CONST(0)
-        }
 
         case "ExponentialExpr": {
             const { base, exponent } = expr
